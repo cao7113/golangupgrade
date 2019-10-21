@@ -1,0 +1,30 @@
+# https://taskfile.dev
+
+version: '2'
+
+# export GOPRIVATE=github.com/cao7113/golangprivatemod
+vars:
+  imageName: golang-upgrade
+
+tasks:
+  run:
+    cmds:
+      - go run main.go -v
+  tidy:
+    cmds:
+      # - go mod init github.com/cao7113/golangupgrade
+      - GOPRIVATE=github.com/cao7113/golangprivatemod go mod tidy -v
+
+
+  test-env:
+    desc: you should set env vars!
+    cmds:
+      - echo "ACCESS_TOKEN_USR={{.githubUser}} ACCESS_TOKEN_PWD={{.githubAccessToken}}"
+
+  dkbuild:
+    cmds:
+      - docker build -t {{.imageName}} --build-arg ACCESS_TOKEN_USR={{.githubUser}} --build-arg ACCESS_TOKEN_PWD={{.githubAccessToken}} .
+
+  dk:
+    cmds:
+      - docker run --rm -it {{.imageName}}
